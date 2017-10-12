@@ -38,6 +38,7 @@ export default class Select extends React.Component {
 
   _close() {
     this.setState({modalVisible: false});
+    this.props.onClose && this.props.onClose(this.state.selectedKey);
   }
 
   _renderLabel() {
@@ -131,6 +132,7 @@ Select.propTypes = {
   selectedKey: React.PropTypes.string,
   labelStyle: Text.propTypes.style,
   onChange: React.PropTypes.func,
+  onClose: React.PropTypes.func,
   placeholder: React.PropTypes.string,
   placeholderKey: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
   placeholderStyle: Text.propTypes.style,
