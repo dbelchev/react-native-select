@@ -7,6 +7,7 @@ import {
     Dimensions,
     TouchableHighlight,
     TouchableWithoutFeedback,
+    TouchableOpacity,
     Platform,
     Picker,
     View
@@ -44,15 +45,22 @@ export default class Select extends React.Component {
         this.props.onClose && this.props.onClose(this.state.selectedKey, event, isCancel);
     }
 
+    _onPress() {
+        Platform.OS === 'ios' ? this._setModalVisible(true) : undefined;
+    }
+
     _renderLabel() {
-        const {models: options, labelStyle, placeholderStyle, placeholderKey, placeholder} = this.props;
-        const onPress = Platform.OS === 'ios' ? this._setModalVisible.bind(this, true) : undefined;
+        const {models: options, labelStyle, labelContainerStyle, placeholderStyle, placeholderKey, placeholder} = this.props;
 
         if(options[this.state.selectedKey] === undefined || this.state.selectedKey === placeholderKey){
-            return <Text style={[styles.placeholderStyle, placeholderStyle]} onPress={onPress}>{placeholder}</Text>
+            return <TouchableWithoutFeedback style={[styles.labelContainerStyle, labelContainerStyle]} onPress={this._onPress.bind(this)}>
+                <View style={[styles.labelContainerStyle, labelContainerStyle]}><Text style={[styles.placeholderStyle, placeholderStyle]} onPress={onPress}>{placeholder}</Text></View>
+            </TouchableWithoutFeedback>
         }
 
-        return <Text style={labelStyle} onPress={onPress}>{options[this.state.selectedKey].label}</Text>
+        return <TouchableWithoutFeedback style={[styles.labelContainerStyle, labelContainerStyle]} onPress={this._onPress.bind(this)}>
+            <View style={[styles.labelContainerStyle, labelContainerStyle]}><Text style={labelStyle}>{options[this.state.selectedKey].label}</Text></View>
+        </TouchableWithoutFeedback>
     }
 
     _renderAndroid() {
@@ -60,19 +68,19 @@ export default class Select extends React.Component {
         return (
             <View style={[styles.selectContainer, style]} {...other}>
                 {this._renderLabel()}
-              <Picker
-                  selectedValue={this.state.selectedKey ? this.state.selectedKey : placeholderKey}
-                  onValueChange={this._onChange.bind(this)}
-                  style={[styles.androidPicker]}
-              >
-                  {Object.keys(options).map((key) => (
-                      <Picker.Item
-                          key={key}
-                          value={key}
-                          label={options[key].label}
-                      />
-                  ))}
-              </Picker>
+                <Picker
+                    selectedValue={this.state.selectedKey ? this.state.selectedKey : placeholderKey}
+                    onValueChange={this._onChange.bind(this)}
+                    style={[styles.androidPicker]}
+                >
+                    {Object.keys(options).map((key) => (
+                        <Picker.Item
+                            key={key}
+                            value={key}
+                            label={options[key].label}
+                        />
+                    ))}
+                </Picker>
             </View>
 
         );
@@ -87,39 +95,39 @@ export default class Select extends React.Component {
         return (
             <View style={[styles.selectContainer, style]} {...other}>
                 {this._renderLabel()}
-              <Modal
-                  animationType="slide"
-                  transparent={true}
-                  visible={this.state.modalVisible}
-              >
-                <TouchableWithoutFeedback onPress={this._setModalVisible.bind(this, false)}>
-                  <View style={[styles.container, modalBackgroundStyle]}>
-                    <View style={styles.pickerBar}>
-                      <Text
-                          style={{color: doneLabelColor}}
-                          onPress={(event) => this._close.call(this, event, false)}>
-                          {doneLabel || "完成"}
-                      </Text>
-                    </View>
-                    <View onStartShouldSetResponder={ (evt) => true }
-                          onResponderReject={ (evt) => {} }
-                          style={[styles.innerContainer, innerContainerTransparentStyle]}>
-                      <Picker selectedValue={this.state.selectedKey}
-                              onValueChange={this._onChange.bind(this)}
-                              style={styles.pickerIOS}
-                      >
-                          {Object.keys(options).map((key) => (
-                              <Picker.Item
-                                  key={key}
-                                  value={key}
-                                  label={options[key].label}
-                              />
-                          ))}
-                      </Picker>
-                    </View>
-                  </View>
-                </TouchableWithoutFeedback>
-              </Modal>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={this.state.modalVisible}
+                >
+                    <TouchableWithoutFeedback onPress={this._setModalVisible.bind(this, false)}>
+                        <View style={[styles.container, modalBackgroundStyle]}>
+                            <View style={styles.pickerBar}>
+                                <Text
+                                    style={{color: doneLabelColor}}
+                                    onPress={(event) => this._close.call(this, event, false)}>
+                                    {doneLabel || "完成"}
+                                </Text>
+                            </View>
+                            <View onStartShouldSetResponder={ (evt) => true }
+                                  onResponderReject={ (evt) => {} }
+                                  style={[styles.innerContainer, innerContainerTransparentStyle]}>
+                                <Picker selectedValue={this.state.selectedKey}
+                                        onValueChange={this._onChange.bind(this)}
+                                        style={styles.pickerIOS}
+                                >
+                                    {Object.keys(options).map((key) => (
+                                        <Picker.Item
+                                            key={key}
+                                            value={key}
+                                            label={options[key].label}
+                                        />
+                                    ))}
+                                </Picker>
+                            </View>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </Modal>
             </View>
         );
     }
@@ -134,6 +142,7 @@ Select.propTypes = {
     options: React.PropTypes.object,
     selectedKey: React.PropTypes.string,
     labelStyle: Text.propTypes.style,
+    labelContainerStyle: Text.propTypes.style,
     onChange: React.PropTypes.func,
     onClose: React.PropTypes.func,
     placeholder: React.PropTypes.string,
@@ -182,5 +191,10 @@ var styles = StyleSheet.create({
         right: 0,
         bottom: 0,
         opacity: 0
+    },
+    labelContainerStyle: {
+        alignSelf: 'stretch',
+        flexDirection:'row',
+        flexGrow: 1
     }
 });
