@@ -10,7 +10,8 @@ import {
     TouchableOpacity,
     Platform,
     Picker,
-    View
+    View,
+    Keyboard
 } from 'react-native';
 
 export default class Select extends React.Component {
@@ -46,6 +47,7 @@ export default class Select extends React.Component {
     }
 
     _onPress() {
+        Keyboard.dismiss();
         Platform.OS === 'ios' ? this._setModalVisible(true) : undefined;
     }
 
