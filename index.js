@@ -56,7 +56,7 @@ export default class Select extends React.Component {
 
         if(options[this.state.selectedKey] === undefined || this.state.selectedKey === placeholderKey){
             return <TouchableWithoutFeedback style={[styles.labelContainerStyle, labelContainerStyle]} onPress={this._onPress.bind(this)}>
-                <View style={[styles.labelContainerStyle, labelContainerStyle]}><Text style={[styles.placeholderStyle, placeholderStyle]} onPress={onPress}>{placeholder}</Text></View>
+                <View style={[styles.labelContainerStyle, labelContainerStyle]}><Text style={[styles.placeholderStyle, placeholderStyle]}>{placeholder}</Text></View>
             </TouchableWithoutFeedback>
         }
 
