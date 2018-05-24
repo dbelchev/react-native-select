@@ -1,5 +1,7 @@
 'use strict';
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import {
     StyleSheet,
     Modal,
@@ -141,14 +143,14 @@ export default class Select extends React.Component {
 }
 
 Select.propTypes = {
-    options: React.PropTypes.object,
-    selectedKey: React.PropTypes.string,
+    options: PropTypes.object,
+    selectedKey: PropTypes.string,
     labelStyle: Text.propTypes.style,
     labelContainerStyle: Text.propTypes.style,
-    onChange: React.PropTypes.func,
-    onClose: React.PropTypes.func,
-    placeholder: React.PropTypes.string,
-    placeholderKey: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
+    onChange: PropTypes.func,
+    onClose: PropTypes.func,
+    placeholder: PropTypes.string,
+    placeholderKey: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     placeholderStyle: Text.propTypes.style,
 };
 
